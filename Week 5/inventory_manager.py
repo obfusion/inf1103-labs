@@ -9,7 +9,7 @@ def get_inventory_path(filename=FILENAME):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(script_dir, filename)
 
-### Checks whether inventory.json exists. Loads and returns its data if found; otherwise begins with an empty inventory
+### Checks whether inventory.json exists.  Loads and returns its data if found; otherwise begins with an empty inventory
 def load_inventory(filename=FILENAME):
     filepath = get_inventory_path(filename)
     if os.path.exists(filepath):
@@ -25,6 +25,21 @@ def load_inventory(filename=FILENAME):
     else:
         print(f"{filename} not found. Beginning with an empty inventory.")
         return []
+
+### Saves the inventory data to inventory.json
+def save_inventory(inventory, filename=FILENAME, verbose=True):
+    filepath = get_inventory_path(filename)
+    if verbose:
+        print("Saving inventory...")
+    try:
+        with open(filepath, "w") as file:
+            json.dump(inventory, file, indent=4)
+        if verbose:
+            print(f"Inventory saved successfully to {filename}.")
+        else:
+            print("Inventory saved successfully.")
+    except IOError as e:
+        print(f"Error saving to {filename}: {e}")
 
 ### Display all products in inventory
 def display_all(inventory):
@@ -124,8 +139,10 @@ def main():
         elif choice == "4":
             search_product(inventory)
         elif choice == "5":
-            print("Save functionality not yet implemented in this phase.")
+            save_inventory(inventory, verbose=True)
         elif choice == "6":
+            print("\nSaving inventory before exit...")
+            save_inventory(inventory, verbose=False)
             print("\nThank you for using Inventory Management System.")
             print("Program terminated.")
             break
